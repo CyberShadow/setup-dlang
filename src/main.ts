@@ -44,23 +44,25 @@ async function run() {
                 const archive2 = await tc.downloadTool(descr.dub.url);
                 // Required on Windows, other archive tools don't mind the override
                 if (process.platform === "win32") {
-                    console.log("Removing: " + dc_path + descr.binpath + "\\dub.exe");
-                    await rmRF(dc_path + descr.binpath + "\\dub.exe");
-                    await descr.libpath.forEach(function(libpath) {
-                        const path = dc_path + libpath;
-                        console.log("Removing: " + path + "\\dub.exe");
-                        return rmRF(path + "\\dub.exe");
+                    [...descr.binpath, ...descr.libpath].forEach(function(path) {
+                        const dub = dc_path + path + "\\dub.exe";
+                        if (existsSync(dub)) {
+                            console.log("Removing: " + dub);
+                            await rmRF(dub);
+                        }
                     });
                 }
-                await extract(descr.dub.url, archive2, dc_path + descr.binpath);
+                await extract(descr.dub.url, archive2, dc_path + descr.binpath[0]);
             }
 
             cached = await tc.cacheDir(dc_path, 'dc', cache_tag);
         }
 
-        const binpath = cached + descr.binpath;
-        console.log("Adding '" + binpath + "' to path");
-        core.addPath(binpath);
+        descr.binpath.forEach(function(binpath) {
+            binpath = cached + binpath;
+            console.log("Adding '" + binpath + "' to path");
+            core.addPath(binpath);
+        });
         core.exportVariable("DC", descr.name);
 
         let LD_LIBRARY_PATH = process.env["LD_LIBRARY_PATH"] || "";

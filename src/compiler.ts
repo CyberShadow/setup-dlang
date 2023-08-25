@@ -6,7 +6,7 @@ export interface CompilerDescription {
     name: string;
     version: string;
     url: string;
-    binpath: string;
+    binpath: string[];
     libpath: string[];
     sig?: string;
     dub?: DubDescription;
@@ -141,7 +141,7 @@ async function dmd(version: string, dub_vers: string, gh_token: string): Promise
             url: universal ? `${base_url}.zip`
                 : minor !== undefined && minor < 69 ? `${base_url}.windows.zip`
                     : `${base_url}.windows.7z`,
-            binpath: "\\dmd2\\windows\\bin",
+            binpath: [ "\\dmd2\\windows\\bin" ],
             libpath: [ "\\dmd2\\windows\\bin64" ],
             dub: await dub(dub_vers, gh_token, legacy),
             // Signatures for nightly releases are not available (yet?)
@@ -153,7 +153,7 @@ async function dmd(version: string, dub_vers: string, gh_token: string): Promise
             url: universal ? `${base_url}.zip`
                 : minor !== undefined && minor < 69 ? `${base_url}.linux.zip`
                     : `${base_url}.linux.tar.xz`,
-            binpath: "/dmd2/linux/bin64",
+            binpath: [ "/dmd2/linux/bin64" ],
             libpath: [ "/dmd2/linux/lib64" ],
             dub: await dub(dub_vers, gh_token, legacy),
             sig: nightly ? undefined : `${base_url}.linux.tar.xz.sig`
@@ -164,7 +164,7 @@ async function dmd(version: string, dub_vers: string, gh_token: string): Promise
             url: universal ? `${base_url}.zip`
                 : minor !== undefined && minor < 69 ? `${base_url}.osx.zip`
                     : `${base_url}.osx.tar.xz`,
-            binpath: "/dmd2/osx/bin",
+            binpath: [ "/dmd2/osx/bin" ],
             libpath: [ "/dmd2/linux/lib64" ],
             dub: await dub(dub_vers, gh_token, legacy),
             sig: nightly ? undefined : `${base_url}.osx.tar.xz.sig`
@@ -239,7 +239,7 @@ async function ldc_resolve_master(gh_token: string): Promise<CompilerDescription
         name: "ldc2",
         version: latest.version,
         url: "https://github.com/ldc-developers/ldc/releases/download/CI/" + latest.name,
-        binpath: `${base_path}bin`,
+        binpath: [ `${base_path}bin` ],
         libpath: libpath
     };
 }
@@ -266,7 +266,7 @@ async function ldc(version: string, dub_vers: string, gh_token: string): Promise
             name: "ldc2",
             version: version,
             url: `${base_url}-windows-multilib.7z`,
-            binpath: `\\ldc2-${version}-windows-multilib\\bin`,
+            binpath: [`\\ldc2-${version}-windows-multilib\\bin`],
             libpath: [`\\ldc2-${version}-windows-multilib\\lib64`],
             dub: await dub(dub_vers, gh_token, false)
         };
@@ -282,7 +282,7 @@ async function ldc(version: string, dub_vers: string, gh_token: string): Promise
                 name: "ldc2",
                 version: version,
                 url: `${base_url}-linux-${arch}.tar.xz`,
-                binpath: `/ldc2-${version}-linux-${arch}/bin`,
+                binpath: [`/ldc2-${version}-linux-${arch}/bin`],
                 libpath: [`/ldc2-${version}-linux-${arch}/lib`, `/ldc2-${version}-linux-${arch}/lib64`],
                 dub: await dub(dub_vers, gh_token, false)
             };
@@ -300,14 +300,14 @@ async function ldc(version: string, dub_vers: string, gh_token: string): Promise
                     name: "ldc2",
                     version: version,
                     url: `${base_url}-osx-universal.tar.xz`,
-                    binpath: `/ldc2-${version}-osx-universal/bin`,
+                    binpath: [`/ldc2-${version}-osx-universal/bin`],
                     libpath: [`/ldc2-${version}-osx-universal/lib-arm64`, `/ldc2-${version}-osx-universal/lib-x86_64`],
                     dub: await dub(dub_vers, gh_token, false)
                 } : {
                     name: "ldc2",
                     version: version,
                     url: `${base_url}-osx-${arch}.tar.xz`,
-                    binpath: `/ldc2-${version}-osx-${arch}/bin`,
+                    binpath: [`/ldc2-${version}-osx-${arch}/bin`],
                     libpath: [`/ldc2-${version}-osx-${arch}/lib-arm64`, `/ldc2-${version}-osx-${arch}/lib`],
                     dub: await dub(dub_vers, gh_token, false)
                 };
