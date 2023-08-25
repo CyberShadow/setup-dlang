@@ -266,7 +266,7 @@ async function ldc(version: string, dub_vers: string, gh_token: string): Promise
             name: "ldc2",
             version: version,
             url: `${base_url}-windows-multilib.7z`,
-            binpath: [`\\ldc2-${version}-windows-multilib\\bin`],
+            binpath: [`\\ldc2-${version}-windows-multilib\\bin`, `\\ldc2-${version}-windows-multilib\\lib32`, `\\ldc2-${version}-windows-multilib\\lib64`],
             libpath: [`\\ldc2-${version}-windows-multilib\\lib64`],
             dub: await dub(dub_vers, gh_token, false)
         };
